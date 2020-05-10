@@ -1,6 +1,9 @@
 <pre>
 R CODE FOR COHORT CHANGE RATIO-BASED STABLE POPULATION REVIEW SHINY APP
 
+FORKED FOR APPLIED DEMOGRAPHY TOOLBOX SHARING, FROM GITHUB REPOSITORY AT https://github.com/edyhsgr/CCRStable
+RELATED SHINY APP AT https://shiny.demog.berkeley.edu/eddieh/CCRStable/
+
 -----
 Some to-do's (as of May 2020): 
       -possible cohort change ratios averaging and/or trending (on longer time series of single-year data)

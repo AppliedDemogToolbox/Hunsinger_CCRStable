@@ -18,14 +18,14 @@
 #DATA (CENSUS BUREAU VINTAGE 2018 POPULATION ESTIMATES BY DEMOGRAPHIC CHARACTERISTICS)
 	#https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata-06.csv 
 	#https://www2.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2010-2018/
-K<-data.frame(read.table(file="https://raw.githubusercontent.com/edyhsgr/CCRStable/master/cc-est2018-alldata-06_Extract.csv",header=TRUE,sep=","))
+K<-data.frame(read.table(file="https://raw.githubusercontent.com/AppliedDemogToolbox/CCRStable/master/cc-est2018-alldata-06_Extract.csv",header=TRUE,sep=","))
 
 #CENSUS ACS (via IPUMS) CA MIGRATION DATA (GENERIC)
-Migration<-data.frame(read.table(file="https://raw.githubusercontent.com/edyhsgr/CCRStable/master/AGenericMigrationProfile_CA_2013to2017ACS.csv",header=TRUE,sep=","))
+Migration<-data.frame(read.table(file="https://raw.githubusercontent.com/AppliedDemogToolbox/CCRStable/master/AGenericMigrationProfile_CA_2013to2017ACS.csv",header=TRUE,sep=","))
 Migration<-c(Migration$CA_F,Migration$CA_M)
 
 #USMD CA SURVIVAL DATA (GENERIC)
-lt<-read.table(file="https://raw.githubusercontent.com/edyhsgr/CCRStable/master/lt_CA_USMD2010to2014.csv",header=TRUE,sep=",")
+lt<-read.table(file="https://raw.githubusercontent.com/AppliedDemogToolbox/CCRStable/master/lt_CA_USMD2010to2014.csv",header=TRUE,sep=",")
 lxF<-lt$lx_Female/100000
 lxM<-lt$lx_Male/100000
 lxT<-lt$lx_Both/100000

@@ -1,8 +1,11 @@
 ##########
-#R CODE FOR COHORT CHANGE RATIO-BASED STABLE POPULATION REVIEW SHINY APP
+#R CODE FOR COHORT CHANGE RATIO-BASED STABLE POPULATION REVIEW 
 #
 #EDDIE HUNSINGER, AUGUST 2019 (UPDATED MAY 2020)
 #https://edyhsgr.github.io/eddieh/
+#
+#FORKED FOR APPLIED DEMOGRAPHY TOOLBOX SHARING, FROM GITHUB REPOSITORY AT https://github.com/edyhsgr/CCRStable
+#RELATED SHINY APP AT https://shiny.demog.berkeley.edu/eddieh/CCRStable/
 #
 #IF YOU WOULD LIKE TO USE, SHARE OR REPRODUCE THIS CODE, BE SURE TO CITE THE SOURCE
 #This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 International License (more information: https://creativecommons.org/licenses/by-sa/3.0/igo/).
@@ -10,190 +13,6 @@
 #THERE IS NO WARRANTY FOR THIS CODE
 #THIS CODE HAS NOT BEEN TESTED AT ALL-- PLEASE LET ME KNOW IF YOU FIND ANY PROBLEMS (edyhsgr@gmail.com)
 ##########
-
-library(shiny)
-ui<-fluidPage(
-
-	tags$h3("Cohort Change Ratio-Based Stable Population Review Shiny App"),
-	p("Related information and ",
-	tags$a(href="https://www.r-project.org/", "R"),
-	"code available at: ",
-	tags$a(href="https://github.com/edyhsgr/CCRStable", 
-	"CCRStable GitHub Repository")
-),
-  
-hr(),
-
-sidebarLayout(
-sidebarPanel(
-
- selectInput("County", "County",
-c(
-"Alameda"="Alameda County",
-"Alpine"="Alpine County",
-"Amador"="Amador County",
-"Butte"="Butte County",
-"Calaveras"="Calaveras County",
-"Colusa"="Colusa County",
-"Contra Costa"="Contra Costa County",
-"Del Norte"="Del Norte County",
-"El Dorado"="El Dorado County",
-"Fresno"="Fresno County",
-"Glenn"="Glenn County",
-"Humboldt"="Humboldt County",
-"Imperial"="Imperial County",
-"Inyo"="Inyo County",
-"Kern"="Kern County",
-"Kings"="Kings County",
-"Lake"="Lake County",
-"Lassen"="Lassen County",
-"Los Angeles"="Los Angeles County",
-"Madera"="Madera County",
-"Marin"="Marin County",
-"Mariposa"="Mariposa County",
-"Mendocino"="Mendocino County",
-"Merced"="Merced County",
-"Modoc"="Modoc County",
-"Mono"="Mono County",
-"Monterey"="Monterey County",
-"Napa"="Napa County",
-"Nevada"="Nevada County",
-"Orange"="Orange County",
-"Placer"="Placer County",
-"Plumas"="Plumas County",
-"Riverside"="Riverside County",
-"Sacramento"="Sacramento County",
-"San Benito"="San Benito County",
-"San Bernardino"="San Bernardino County",
-"San Diego"="San Diego County",
-"San Francisco"="San Francisco County",
-"San Joaquin"="San Joaquin County",
-"San Luis Obispo"="San Luis Obispo County",
-"San Mateo"="San Mateo County",
-"Santa Barbara"="Santa Barbara County",
-"Santa Clara"="Santa Clara County",
-"Santa Cruz"="Santa Cruz County",
-"Shasta"="Shasta County",
-"Sierra"="Sierra County",
-"Siskiyou"="Siskiyou County",
-"Solano"="Solano County",
-"Sonoma"="Sonoma County",
-"Stanislaus"="Stanislaus County",
-"Sutter"="Sutter County",
-"Tehama"="Tehama County",
-"Trinity"="Trinity County",
-"Tulare"="Tulare County",
-"Tuolumne"="Tuolumne County",
-"Ventura"="Ventura County",
-"Yolo"="Yolo County",
-"Yuba"="Yuba County"
-),
-),
-
-selectInput("Sex", "Sex",
-c(
-"Total"="Total",
-"Female"="Female",
-"Male"="Male"
-),
-),
-
-numericInput("STEP","Project to (year)",2030,2020,3000,step=5),
-
-selectInput("RatiosFrom", "Using ratios from",
-c(
-"2010 to 2015"="3",
-"2011 to 2016"="4",
-"2012 to 2017"="5",
-"2013 to 2018"="6"
-),
-),
-
-hr(),
-
-selectInput("ImposeTFR", "Impose iTFR?",
-c(
-"No"="NO",
-"Yes"="YES"
-),
-),
-
-numericInput("ImposedTFR","If Yes, iTFR level",2.1,0,10,step=.1),
-
-hr(),
-
-numericInput("NetMigrationAdjustLevel","Net migration adjustment (annual, percent of population)",0,-25,25,step=.1),
-
-hr(),
-
-selectInput("ImputeMort", "Impute mortality?",
-c(
-"Yes"="YES",
-"No"="NO"
-),
-),
-
-numericInput("BAStart","If yes, Brass' model alpha for First projection step...",.03,-2,2,step=.03),
-numericInput("BAEnd","...and Brass' model alpha for Last projection step",.12,-2,2,step=.03),
-
-hr(),
-
-p("This interface was made with ",
-tags$a(href="https://shiny.rstudio.com/", 
-	"Shiny for R."),
-       
-tags$a(href="https://edyhsgr.github.io/eddieh/", 
-	"Eddie Hunsinger,"), 
-
-"August 2019 (updated May 2020)."),
-
-p("Population estimates inputs from ",
-tags$a(href="https://www.census.gov/programs-surveys/popest.html", 
-	"US Census Bureau Vintage 2018 Population Estimates.")),
-
-p(" More information on cohort change ratios, including a chapter on stable population: ",
-tags$a(href="https://www.worldcat.org/title/cohort-change-ratios-and-their-applications/oclc/988385033", 
-	"Baker, Swanson, Tayman, and Tedrow (2017)."),
-
-p("More information on iTFR: ",
-tags$a(href="https://osf.io/adu98/", 
-	"Hauer and Schmertmann (2019)"),
-	" and ",
-tags$a(href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0067226", 
-	"Hauer, Baker, and Brown (2013).")),
-
-p("Slides with background thoughts on adjusting net migration: ",
-tags$a(href="https://edyhsgr.github.io/eddieh/documents/ProjPresentation.pdf", 
-	"Hunsinger (2007)."),
-
-"Migration by age over time comparisons from Alaska data: ",
-tags$a(href="http://shiny.demog.berkeley.edu/eddieh/AKPFDMigrationReview/", 
-	"Hunsinger (2018)."),
-
-"Interface with net migration adjustment examples and comparisons: ",
-tags$a(href="http://shiny.demog.berkeley.edu/eddieh/NMAdjustCompare/", 
-	"Hunsinger (2019)."),
-
-"Migration adjustment profile was made from the US Census Bureau's 2013 to 2017 
-American Community Survey Public Use Microdata Sample, accessed via the ", 
-tags$a(href="https://usa.ipums.org/usa/", 
-	"IPUMS USA, University of Minnesota.")),
-
-tags$a(href="https://twitter.com/ApplDemogToolbx/status/1079286699941752832", 
-	"Graph of e0 and Brass' relational life table alpha by US state."),
-
-"Model life table (0.0 alpha) is the 5x5 2010 to 2014 life table for California from the ",
-tags$a(href="https://usa.mortality.org/index.php", 
-	"United States Mortality Database.")),
-
-width=3
-),
-
-mainPanel(
-	
-	plotOutput("plots")
-))
-)
 
 ##READING EXTERNAL DATA IN
 #DATA (CENSUS BUREAU VINTAGE 2018 POPULATION ESTIMATES BY DEMOGRAPHIC CHARACTERISTICS)
@@ -214,10 +33,6 @@ lxF<-c(lxF[1],lxF[3:24])
 lxM<-c(lxM[1],lxM[3:24])
 lxT<-c(lxT[1],lxT[3:24])
 
-server<-function(input, output) {	
-	output$plots<-renderPlot({
-par(mfrow=c(2,2))
-
 ##########
 #####
 ##SCRIPT INPUTS
@@ -227,7 +42,7 @@ options(scipen=999)
 #DIMENSIONS
 SIZE<-36
 HALFSIZE<-SIZE/2
-STEPS<-(input$STEP-2015)/5
+STEPS<-(2030-2015)/5
 STEPSSTABLE<-STEPS+1000
 CURRENTSTEP<-0
 CURRENTSTEPSTABLE<-0
@@ -235,74 +50,69 @@ PROJECTIONYEAR<-STEPS*5+2015
 FERTWIDTH<-35
 
 #SELECTING RATIOS BASIS
-FirstYear<-strtoi(input$RatiosFrom)
-SecondYear<-strtoi(input$RatiosFrom)+5
+#(Year "6" is 2013, 7 is 2014, 8 is 2015...)
+FirstYear<-strtoi(6)
+SecondYear<-strtoi(6)+5
 
 #IMPOSED TFR OPTION
-ImposedTFR<-input$ImposedTFR
+ImposedTFR<-2.1
 ffab<-.4886
-UseImposedTFR<-input$ImposeTFR
+UseImposedTFR<-"NO"
 
 ##ADJUST BY MIGRATION OPTION
-NetMigrationAdjustLevel<-input$NetMigrationAdjustLevel/100
+NetMigrationAdjustLevel<-0/100
+
+#IMPUTE MORTALITY OPTION
+##"BA" IS THE BRASS RELATIONAL LOGIT MODEL ALPHA
+BA_start<-.03
+BA_end<-.12
+BB<-1
+ImputeMort<-"YES"
 
 #SELECT BY SEX
-SelectBySex<-input$Sex
+SelectBySex<-"Total"
 
-Name<-paste(input$County)
+Name<-paste("Alameda County")
 
-TMinusOneAgeInit_F<-subset(K,CTYNAME==input$County & YEAR==3 & AGEGRP>0)
+TMinusOneAgeInit_F<-subset(K,CTYNAME==Name & YEAR==3 & AGEGRP>0)
 TMinusOneAgeInit_F<-TMinusOneAgeInit_F$TOT_FEMALE
 TMinusOneAge_F<-TMinusOneAgeInit_F
 
-TMinusOneAgeInit_M<-subset(K,CTYNAME==input$County & YEAR==3 & AGEGRP>0)
+TMinusOneAgeInit_M<-subset(K,CTYNAME==Name & YEAR==3 & AGEGRP>0)
 TMinusOneAgeInit_M<-TMinusOneAgeInit_M$TOT_MALE
 TMinusOneAge_M<-TMinusOneAgeInit_M
 
 TMinusOneAge<-TMinusOneAgeInit<-c(TMinusOneAge_F,TMinusOneAge_M)
 
-TMinusOneAgeInitRatios_F<-subset(K,CTYNAME==input$County & YEAR==FirstYear & AGEGRP>0)
+TMinusOneAgeInitRatios_F<-subset(K,CTYNAME==Name & YEAR==FirstYear & AGEGRP>0)
 TMinusOneAgeInitRatios_F<-TMinusOneAgeInitRatios_F$TOT_FEMALE
 TMinusOneAgeRatios_F<-TMinusOneAgeInitRatios_F
 
-TMinusOneAgeInitRatios_M<-subset(K,CTYNAME==input$County & YEAR==FirstYear & AGEGRP>0)
+TMinusOneAgeInitRatios_M<-subset(K,CTYNAME==Name & YEAR==FirstYear & AGEGRP>0)
 TMinusOneAgeInitRatios_M<-TMinusOneAgeInitRatios_M$TOT_MALE
 TMinusOneAgeRatios_M<-TMinusOneAgeInitRatios_M
 
 TMinusOneAgeRatios<-TMinusOneAgeInitRatios<-c(TMinusOneAgeRatios_F,TMinusOneAgeRatios_M)
 
-TMinusZeroAgeInit_F<-subset(K,CTYNAME==input$County & YEAR==8 & AGEGRP>0)
+TMinusZeroAgeInit_F<-subset(K,CTYNAME==Name & YEAR==8 & AGEGRP>0)
 TMinusZeroAgeInit_F<-TMinusZeroAgeInit_F$TOT_FEMALE
 TMinusZeroAge_F<-TMinusZeroAgeInit_F
 
-TMinusZeroAgeInit_M<-subset(K,CTYNAME==input$County & YEAR==8 & AGEGRP>0)
+TMinusZeroAgeInit_M<-subset(K,CTYNAME==Name & YEAR==8 & AGEGRP>0)
 TMinusZeroAgeInit_M<-TMinusZeroAgeInit_M$TOT_MALE
 TMinusZeroAge_M<-TMinusZeroAgeInit_M
 
 TMinusZeroAge<-TMinusZeroAgeInit<-c(TMinusZeroAge_F,TMinusZeroAge_M)
 
-TMinusZeroAgeInitRatios_F<-subset(K,CTYNAME==input$County & YEAR==SecondYear & AGEGRP>0)
+TMinusZeroAgeInitRatios_F<-subset(K,CTYNAME==Name & YEAR==SecondYear & AGEGRP>0)
 TMinusZeroAgeInitRatios_F<-TMinusZeroAgeInitRatios_F$TOT_FEMALE
 TMinusZeroAgeRatios_F<-TMinusZeroAgeInitRatios_F
 
-TMinusZeroAgeInitRatios_M<-subset(K,CTYNAME==input$County & YEAR==SecondYear & AGEGRP>0)
+TMinusZeroAgeInitRatios_M<-subset(K,CTYNAME==Name & YEAR==SecondYear & AGEGRP>0)
 TMinusZeroAgeInitRatios_M<-TMinusZeroAgeInitRatios_M$TOT_MALE
 TMinusZeroAgeRatios_M<-TMinusZeroAgeInitRatios_M
 
 TMinusZeroAgeRatios<-TMinusZeroAgeInitRatios<-c(TMinusZeroAgeRatios_F,TMinusZeroAgeRatios_M)
-
-##"BA" IS THE BRASS RELATIONAL LOGIT MODEL ALPHA
-if(input$ImputeMort=="YES") {
-BA_start<-input$BAStart
-BA_end<-input$BAEnd
-BB<-1
-}
-
-if(input$ImputeMort=="NO") {
-BA_start<-0
-BA_end<-0
-BB<-1
-}
 
 #####
 ##CALCULATIONS
@@ -480,9 +290,9 @@ TMinusZeroAgeInit<-array(c(TMinusZeroAgeInit_T,TMinusZeroAgeInit_F,TMinusZeroAge
 ##GRAPHS (SOME ~HACKY LABELING SO MAY [LIKELY] NOT RENDER WELL)
 ##FIRST GRAPH
 agegroups<-c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
-if(SelectBySex=="Total") {plot(TMinusOneAgeInit[,1]/sum(TMinusOneAgeInit[,1]),type="l",col="orange",main=paste(text=c(input$County,", ",input$Sex),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
-if(SelectBySex=="Female") {plot(TMinusOneAgeInit[,2]/sum(TMinusOneAgeInit[,2]),type="l",col="orange",main=paste(text=c(input$County,", ",input$Sex),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
-if(SelectBySex=="Male") {plot(TMinusOneAgeInit[,3]/sum(TMinusOneAgeInit[,3]),type="l",col="orange",main=paste(text=c(input$County,", ",input$Sex),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
+if(SelectBySex=="Total") {plot(TMinusOneAgeInit[,1]/sum(TMinusOneAgeInit[,1]),type="l",col="orange",main=paste(text=c(Name,", ","Total"),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
+if(SelectBySex=="Female") {plot(TMinusOneAgeInit[,2]/sum(TMinusOneAgeInit[,2]),type="l",col="orange",main=paste(text=c(Name,", ","Female"),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
+if(SelectBySex=="Male") {plot(TMinusOneAgeInit[,3]/sum(TMinusOneAgeInit[,3]),type="l",col="orange",main=paste(text=c(Name,", ","Male"),collapse=""),ylim=c(0,.12),axes=FALSE,xlab="",ylab="Population (proportional)",lwd=4)}
 
 if(SelectBySex=="Total") {lines(TMinusZeroAgeInit[,1]/sum(TMinusZeroAgeInit[,1]),col="blue",lwd=4)}
 if(SelectBySex=="Female") {lines(TMinusZeroAgeInit[,2]/sum(TMinusZeroAgeInit[,2]),col="blue",lwd=4)}
@@ -493,10 +303,10 @@ if(SelectBySex=="Female") {lines(NewAge[,2]/sum(NewAge[,2]),col="dark green",lty
 if(SelectBySex=="Male") {lines(NewAge[,3]/sum(NewAge[,3]),col="dark green",lty=1,lwd=4)}
 
 if (min(StableAge)>=0) {
-mtext(side=1,"Age groups",line=4,cex=.75)
+mtext(side=1,"Age groups",line=4,cex=1)
 axis(side=1,at=1:HALFSIZE,las=2,labels=agegroups,cex.axis=0.9)
 axis(side=2)
-legend(11.5, .12, legend=c("2010 (estimate)","2015 (estimate)",paste(c(PROJECTIONYEAR),"(projection)"),"Stable"),
+legend(10, .12, legend=c("2010 (estimate)","2015 (estimate)",paste(c(PROJECTIONYEAR),"(projection)"),"Stable"),
        col=c("orange","blue","dark green","black"), lty=c(1,1,1,3),lwd=c(4,4,4,1.5),cex=1.2)
 }
 
@@ -508,22 +318,22 @@ legend(11.5, .12, legend=c("2010 (estimate)","2015 (estimate)",paste(c(PROJECTIO
        col=c("orange","blue","dark green"), lty=c(1,1,1),lwd=c(4,4,4),cex=1.2)
 }
 
-mtext(side=1,c("Sum 2010:"),line=-15,adj=.125,col="orange")
-if(SelectBySex=="Total") {mtext(side=1,c(sum(TMinusOneAgeInit[,1])),line=-15,adj=.3,col="orange")}
-if(SelectBySex=="Female") {mtext(side=1,c(sum(TMinusOneAgeInit[,2])),line=-15,adj=.3,col="orange")}
-if(SelectBySex=="Male") {mtext(side=1,c(sum(TMinusOneAgeInit[,3])),line=-15,adj=.3,col="orange")}
+mtext(side=1,c("Sum 2010:"),line=-24,adj=.125,col="orange")
+if(SelectBySex=="Total") {mtext(side=1,c(sum(TMinusOneAgeInit[,1])),line=-24,adj=.3,col="orange")}
+if(SelectBySex=="Female") {mtext(side=1,c(sum(TMinusOneAgeInit[,2])),line=-24,adj=.3,col="orange")}
+if(SelectBySex=="Male") {mtext(side=1,c(sum(TMinusOneAgeInit[,3])),line=-24,adj=.3,col="orange")}
 
-mtext(side=1,c("Sum 2015:"),line=-14,adj=.125,col="blue")
-if(SelectBySex=="Total") {mtext(side=1,c(sum(TMinusZeroAgeInit[,1])),line=-14,adj=.3,col="blue")}
-if(SelectBySex=="Female") {mtext(side=1,c(sum(TMinusZeroAgeInit[,2])),line=-14,adj=.3,col="blue")}
-if(SelectBySex=="Male") {mtext(side=1,c(sum(TMinusZeroAgeInit[,3])),line=-14,adj=.3,col="blue")}
+mtext(side=1,c("Sum 2015:"),line=-23,adj=.125,col="blue")
+if(SelectBySex=="Total") {mtext(side=1,c(sum(TMinusZeroAgeInit[,1])),line=-23,adj=.3,col="blue")}
+if(SelectBySex=="Female") {mtext(side=1,c(sum(TMinusZeroAgeInit[,2])),line=-23,adj=.3,col="blue")}
+if(SelectBySex=="Male") {mtext(side=1,c(sum(TMinusZeroAgeInit[,3])),line=-23,adj=.3,col="blue")}
 
-mtext(side=1,c("Sum "),line=-13,adj=.117,col="dark green")
-mtext(side=1,c(PROJECTIONYEAR),line=-13,adj=.18,col="dark green")
-mtext(side=1,c(":"),line=-13,adj=.225,col="dark green")
-if(SelectBySex=="Total") {mtext(side=1,c(round(sum(NewAge[,1]))),line=-13,adj=.3,col="dark green")}
-if(SelectBySex=="Female") {mtext(side=1,c(round(sum(NewAge[,2]))),line=-13,adj=.3,col="dark green")}
-if(SelectBySex=="Male") {mtext(side=1,c(round(sum(NewAge[,3]))),line=-13,adj=.3,col="dark green")}
+mtext(side=1,c("Sum "),line=-22,adj=.117,col="dark green")
+mtext(side=1,c(PROJECTIONYEAR),line=-22,adj=.18,col="dark green")
+mtext(side=1,c(":"),line=-22,adj=.24,col="dark green")
+if(SelectBySex=="Total") {mtext(side=1,c(round(sum(NewAge[,1]))),line=-22,adj=.3,col="dark green")}
+if(SelectBySex=="Female") {mtext(side=1,c(round(sum(NewAge[,2]))),line=-22,adj=.3,col="dark green")}
+if(SelectBySex=="Male") {mtext(side=1,c(round(sum(NewAge[,3]))),line=-22,adj=.3,col="dark green")}
 
 mtext(side=1,c("iTFR 2010:"),line=-7,adj=.13,col="orange")
 mtext(side=1,c(round(ImpliedTFR2010,2)),line=-7,adj=.29,col="orange")
@@ -564,53 +374,34 @@ if(SelectBySex=="Male") {STABLEGROWTHRATE<-paste(text=c("~r (2015 forward):  ...
 mtext(side=1,c(STABLEGROWTHRATE),line=-9,adj=.15,col="black")
 }
 
-if (input$ImputeMort=="YES" & SelectBySex=="Total") {
+if (ImputeMort=="YES" & SelectBySex=="Total") {
 mtext(side=1,c("Imputed starting e0, female: "),line=-3,adj=.157,col="black")
-mtext(side=1,c(round(CCRNew$e0FStart,1)),line=-3,adj=.455,col="black")
+mtext(side=1,c(round(CCRNew$e0FStart,1)),line=-3,adj=.5,col="black")
 mtext(side=1,c("Imputed starting e0, male: "),line=-2,adj=.155,col="black")
-mtext(side=1,c(round(CCRNew$e0MStart,1)),line=-2,adj=.4565,col="black")
+mtext(side=1,c(round(CCRNew$e0MStart,1)),line=-2,adj=.5,col="black")
 }
 
-if (input$ImputeMort=="YES" & SelectBySex=="Female") {
+if (ImputeMort=="YES" & SelectBySex=="Female") {
 mtext(side=1,c("Imputed starting e0, female: "),line=-3,adj=.157,col="black")
-mtext(side=1,c(round(CCRNew$e0FStart,1)),line=-3,adj=.455,col="black")
+mtext(side=1,c(round(CCRNew$e0FStart,1)),line=-3,adj=.5,col="black")
 }
 
-if (input$ImputeMort=="YES" & SelectBySex=="Male") {
+if (ImputeMort=="YES" & SelectBySex=="Male") {
 mtext(side=1,c("Imputed starting e0, male: "),line=-3,adj=.155,col="black")
-mtext(side=1,c(round(CCRNew$e0MStart,1)),line=-3,adj=.4565,col="black")
+mtext(side=1,c(round(CCRNew$e0MStart,1)),line=-3,adj=.5,col="black")
 }
+
+Sys.sleep(5)
 
 ##SECOND GRAPH
 agegroups2<-c("5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
-
 plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.5,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
-mtext(side=1,c("(Note: 85+ ratio is applied to full 80+ age group)"),line=-42,adj=.50,col="black")
+mtext(side=1,c("(Note: 85+ ratio is applied to full 80+ age group)"),line=-27,adj=.5,col="black")
 lines(Ratios[20:36],type="l",col="gold",lwd=4)
 lines(CCRatiosF,type="l",col="dodger blue",lty=2,lwd=2)
 lines(CCRatiosM,type="l",col="gold",lty=2,lwd=2)
-mtext(side=1,"Age groups",line=4,cex=.75)
+mtext(side=1,"Age groups",line=4,cex=1)
 axis(side=1,at=1:(HALFSIZE-1),labels=agegroups2,las=2,cex.axis=0.9)
 axis(side=2)
-legend(7,1.75, legend=c("Female","Male", "Female, with migration and mortality adjustments","Male, with migration and mortality adjustments"),
-       col=c("dodger blue","gold","dodger blue","gold"), lty=c(1,1,2,2),lwd=c(4,4,2,2),cex=1.2)
-
-if (input$ImputeMort=="YES") {
-mtext(side=1,c("Imputed e0, female:"),line=-10,adj=.125,col="black")
-mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-10,adj=.35,col="black")
-mtext(side=1,c("Imputed e0, male:"),line=-9,adj=.122,col="black")
-mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-9,adj=.35,col="black")
-}
-
-##THIRD GRAPH
-barplot(NewAge_F,horiz=T,names=agegroups,space=0,xlim=c(max(NewAge_M)*2,0),col="dodger blue",las=1,main=paste(text=c("Female, ",PROJECTIONYEAR),collapse=""))
-
-##FOURTH GRAPH
-barplot(NewAge_M,horiz=T,names=FALSE,space=0,xlim=c(0,max(NewAge_M)*2),col="gold",main=paste(text=c("Male, ",PROJECTIONYEAR),collapse=""))
-##########
-
-},height=1200,width=1200)
-		
-}
-
-shinyApp(ui = ui, server = server)
+legend(5,1.75, legend=c("Female","Male", "Female, with migration and mortality adjustments","Male, with migration and mortality adjustments"),
+       col=c("dodger blue","gold","dodger blue","gold"), lty=c(1,1,2,2),lwd=c(4,4,2,2),cex=1)

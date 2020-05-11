@@ -408,3 +408,10 @@ axis(side=2)
 legend(5,1.75, legend=c("Female","Male", "Female, with migration and mortality adjustments","Male, with migration and mortality adjustments"),
        col=c("dodger blue","gold","dodger blue","gold"), lty=c(1,1,2,2),lwd=c(4,4,2,2),cex=1)
 
+if (ImputeMort=="YES") {
+mtext(side=1,c("Imputed e0, female:"),line=-8,adj=.125,col="black")
+mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.35,col="black")
+mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
+mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.35,col="black")
+}
+

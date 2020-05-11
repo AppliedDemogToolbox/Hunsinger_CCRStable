@@ -126,7 +126,6 @@ S_F<-array(0,c(HALFSIZE,HALFSIZE))
 S_F<-rbind(0,cbind(diag(Ratios[2:(HALFSIZE)]),0))
 	S_F[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[HALFSIZE]/(TMinusOneAgeRatios[HALFSIZE-1]+TMinusOneAgeRatios[HALFSIZE])
 	Ratios[HALFSIZE]<-S_F[HALFSIZE,HALFSIZE]<-S_F[HALFSIZE,HALFSIZE-1]
-	Ratios[HALFSIZE]<-Ratios[HALFSIZE]
 B_F<-0*S_F
 B_F[1,4:10]<-Ratios[1]*ffab
 A_F<-B_F+S_F
@@ -135,7 +134,6 @@ S_M<-array(0,c(HALFSIZE,HALFSIZE))
 S_M<-rbind(0,cbind(diag(Ratios[20:SIZE]),0))
 	S_M[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[SIZE]/(TMinusOneAgeRatios[SIZE-1]+TMinusOneAgeRatios[SIZE])
 	Ratios[SIZE]<-S_M[HALFSIZE,HALFSIZE]<-S_M[HALFSIZE,HALFSIZE-1]
-	Ratios[SIZE]<-Ratios[SIZE]
 B_M<-0*S_M
 B_M[1,4:10]<-Ratios[1]*(1-ffab)
 

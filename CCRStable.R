@@ -398,7 +398,7 @@ Sys.sleep(5)
 ##SECOND GRAPH
 agegroups2<-c("5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
 plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.5,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
-mtext(side=1,c("(Note: 85+ ratio is applied to full 80+ age group)"),line=-27,adj=.5,col="black")
+mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-27,adj=.5,col="black")
 lines(Ratios[20:36],type="l",col="gold",lwd=4)
 lines(CCRatiosF,type="l",col="dodger blue",lty=2,lwd=2)
 lines(CCRatiosM,type="l",col="gold",lty=2,lwd=2)

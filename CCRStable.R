@@ -175,7 +175,7 @@ ImpliedTFR2015<-((TMinusZeroAgeInit[1]+TMinusZeroAgeInit[HALFSIZE+1])/5)/sum(TMi
 #MAX STEPS IN CASE USER GETS CARRIED AWAY
 if(STEPS<198){
 
-#FUNCTION INPUTS (PARTIAL)
+#FUNCTION INPUTTING
 CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	{
 
@@ -214,6 +214,7 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	lxFAdj<-array(0,length(lxF))
 	lxMAdj<-array(0,length(lxM))
 
+	#INTERPOLATING BRASS ALPHA BETWEEN FIRST AND LAST STEP
 	if(CURRENTSTEP<=STEPS){
 	for (i in 1:length(lxFAdj)){lxFAdj[i]<-1/(1+exp(-2*(BA_start*(1-CURRENTSTEP/STEPS)+BA_end*(CURRENTSTEP/STEPS))-2*BB*YxF[i]))}
 	for (i in 1:length(lxMAdj)){lxMAdj[i]<-1/(1+exp(-2*(BA_start*(1-CURRENTSTEP/STEPS)+BA_end*(CURRENTSTEP/STEPS))-2*BB*YxM[i]))}
@@ -246,7 +247,7 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	e0FAdj<-sum(LxFAdj[1:22]*5)
 	e0MAdj<-sum(LxMAdj[1:22]*5)
 
-#CONSTRUCT PROJECTION MATRICES FOR USE IN ADJUSTMENT (BY ADDITION)
+#CONSTRUCT PROJECTION MATRICES WITH SURVIVAL ADJUSTMENT
 	SAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
 	SAdj_F<-rbind(0,cbind(diag(SxFAdj[2:(HALFSIZE)]-SxFStart[2:(HALFSIZE)]),0))
 	SAdj_F<-SAdj_F+S_F

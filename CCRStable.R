@@ -208,6 +208,7 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	SxMStart[length(SxMStart)-1]<-LxMStart[length(SxMStart)]/(LxMStart[length(SxMStart)-1]+LxMStart[length(SxMStart)])
 	SxMStart[length(SxMStart)]<-SxMStart[length(SxMStart)-1]
 
+	#INITIAL e0
 	e0FStart<-sum(LxFStart[1:22]*5)
 	e0MStart<-sum(LxMStart[1:22]*5)
 
@@ -220,11 +221,13 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	for (i in 1:length(lxMAdj)){lxMAdj[i]<-1/(1+exp(-2*(BA_start*(1-CURRENTSTEP/STEPS)+BA_end*(CURRENTSTEP/STEPS))-2*BB*YxM[i]))}
 	}
 
+	#ALLOWING FOR LONG-TERM (STABLE POPULATION) SIMULATION
 	if(CURRENTSTEP>=STEPS){
 	for (i in 1:length(lxFAdj)){lxFAdj[i]<-1/(1+exp(-2*BA_end-2*BB*YxF[i]))}
 	for (i in 1:length(lxMAdj)){lxMAdj[i]<-1/(1+exp(-2*BA_end-2*BB*YxM[i]))}
 	}
 
+	#SURVIVAL ADJUSTMENTS (Lx, SX)
 	LxFAdj<-array(0,length(lxF))
 	LxMAdj<-array(0,length(lxM))
 	##**THIS IS A LITTLE OFF FOR THE FIRST AGE GROUP**
@@ -244,6 +247,7 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	SxMAdj[length(SxMAdj)-1]<-LxMAdj[length(SxMAdj)]/(LxMAdj[length(SxMAdj)-1]+LxMAdj[length(SxMAdj)])
 	SxMAdj[length(SxMAdj)]<-SxMAdj[length(SxMAdj)-1]
 
+	#ADJUSTED e0
 	e0FAdj<-sum(LxFAdj[1:22]*5)
 	e0MAdj<-sum(LxMAdj[1:22]*5)
 

@@ -184,19 +184,19 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	for (i in 1:length(lxF)){YxF[i]<-.5*log(lxF[i]/(1-lxF[i]))}
 	for (i in 1:length(lxM)){YxM[i]<-.5*log(lxM[i]/(1-lxM[i]))}
 	
-	lxFStart<-lxFEnd<-array(0,length(lxF))
-	lxMStart<-lxMEnd<-array(0,length(lxM))
+	lxFStart<-array(0,length(lxF))
+	lxMStart<-array(0,length(lxM))
 	for (i in 1:length(lxFStart)){lxFStart[i]<-1/(1+exp(-2*BA_start-2*BB*YxF[i]))}
 	for (i in 1:length(lxMStart)){lxMStart[i]<-1/(1+exp(-2*BA_start-2*BB*YxM[i]))}
 	
-	LxFStart<-LxFEnd<-array(0,length(lxF))
-	LxMStart<-LxMEnd<-array(0,length(lxM))
+	LxFStart<-array(0,length(lxF))
+	LxMStart<-array(0,length(lxM))
 	##**THIS IS A LITTLE OFF FOR THE FIRST AGE GROUP**
 	for (i in 1:length(LxFStart)){LxFStart[i]<-.5*(lxFStart[i]+lxFStart[i+1])}
 	for (i in 1:length(LxMStart)){LxMStart[i]<-.5*(lxMStart[i]+lxMStart[i+1])}
 	
-	SxFStart<-SxFEnd<-array(0,length(lxF)-1)
-	SxMStart<-SxMEnd<-array(0,length(lxM)-1)
+	SxFStart<-array(0,length(lxF)-1)
+	SxMStart<-array(0,length(lxM)-1)
 	for (i in 1:length(SxFStart)-1){SxFStart[i]<-(LxFStart[i+1]/LxFStart[i])}
 	for (i in 1:length(SxMStart)-1){SxMStart[i]<-(LxMStart[i+1]/LxMStart[i])}	
 
@@ -444,7 +444,7 @@ Sys.sleep(5)
 #SECOND GRAPH - COHORT CHANGE RATIOS WITH AND WITHOUT ADJUSTMENTS
 agegroups2<-c("5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
 plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.5,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
-mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-27,adj=.5,col="black")
+mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-25,adj=.5,col="black")
 lines(Ratios[20:36],type="l",col="gold",lwd=4)
 lines(CCRatiosF,type="l",col="dodger blue",lty=2,lwd=2)
 lines(CCRatiosM,type="l",col="gold",lty=2,lwd=2)
@@ -456,8 +456,8 @@ legend(5,1.75, legend=c("Female","Male", "Female, with migration and mortality a
 
 if (ImputeMort=="YES") {
 mtext(side=1,c("Imputed e0, female:"),line=-8,adj=.125,col="black")
-mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.35,col="black")
+mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.42,col="black")
 mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
-mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.35,col="black")
+mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")
 }
 

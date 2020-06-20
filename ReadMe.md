@@ -2,7 +2,7 @@
 EDDIE'S R CODE FOR COHORT CHANGE RATIO-BASED (HAMILTON-PERRY) POPULATION PROJECTIONS WITH COMPONENTS AND STABLE POPULATION INFORMATION
 
 -----
-Some to-do's (as of May 2020): 
+Some to-do's (as of June 2020): 
       -possible cohort change ratios averaging and/or trending (on longer time series of single-year data)
       -autoregressive models for the input components, and stochastic option
             (following https://applieddemogtoolbox.github.io/Toolbox/#StochasticForecast)

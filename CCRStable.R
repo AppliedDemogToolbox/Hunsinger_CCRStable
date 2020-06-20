@@ -64,6 +64,7 @@ UseImposedTFR<-"NO"
 
 ##ADJUST BY MIGRATION OPTION
 NetMigrationAdjustLevel<-0/100
+GrossMigrationAdjustLevel<-((100*-1)+100)/100
 
 ##IMPUTE MORTALITY OPTION
 ##"BA" IS THE BRASS RELATIONAL LOGIT MODEL ALPHA
@@ -135,9 +136,9 @@ Ratios[1]<-(TMinusZeroAgeRatios[1]+TMinusZeroAgeRatios[HALFSIZE+1])/sum(TMinusOn
 S_F<-array(0,c(HALFSIZE,HALFSIZE))
 S_F<-rbind(0,cbind(diag(Ratios[2:(HALFSIZE)]),0))
 
-###OPEN-ENDED AGE GROUP OPTION (FEMALE)
-#S_F[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[HALFSIZE]/(TMinusOneAgeRatios[HALFSIZE-1]+TMinusOneAgeRatios[HALFSIZE])
-#Ratios[HALFSIZE]<-S_F[HALFSIZE,HALFSIZE]<-S_F[HALFSIZE,HALFSIZE-1]
+##OPEN-ENDED AGE GROUP OPTION (FEMALE)
+S_F[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[HALFSIZE]/(TMinusOneAgeRatios[HALFSIZE-1]+TMinusOneAgeRatios[HALFSIZE])
+Ratios[HALFSIZE]<-S_F[HALFSIZE,HALFSIZE]<-S_F[HALFSIZE,HALFSIZE-1]
 
 ##BIRTHS AND MATRIX PORTION CONSTRUCTION (FEMALE)
 B_F<-0*S_F
@@ -148,9 +149,9 @@ A_F<-B_F+S_F
 S_M<-array(0,c(HALFSIZE,HALFSIZE))
 S_M<-rbind(0,cbind(diag(Ratios[20:SIZE]),0))
 
-###OPEN-ENDED AGE GROUP OPTION (MALE)
-#S_M[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[SIZE]/(TMinusOneAgeRatios[SIZE-1]+TMinusOneAgeRatios[SIZE])
-#Ratios[SIZE]<-S_M[HALFSIZE,HALFSIZE]<-S_M[HALFSIZE,HALFSIZE-1]
+##OPEN-ENDED AGE GROUP OPTION (MALE)
+S_M[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[SIZE]/(TMinusOneAgeRatios[SIZE-1]+TMinusOneAgeRatios[SIZE])
+Ratios[SIZE]<-S_M[HALFSIZE,HALFSIZE]<-S_M[HALFSIZE,HALFSIZE-1]
 
 ##BIRTHS AND MATRIX PORTION CONSTRUCTION (MALE)
 B_M<-0*S_M
@@ -200,13 +201,13 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	for (i in 1:length(SxFStart)-1){SxFStart[i]<-(LxFStart[i+1]/LxFStart[i])}
 	for (i in 1:length(SxMStart)-1){SxMStart[i]<-(LxMStart[i+1]/LxMStart[i])}	
 
-	###(OPEN-ENDED AGE GROUP OPTION (FEMALE))
-	#SxFStart[length(SxFStart)-1]<-LxFStart[length(SxFStart)]/(LxFStart[length(SxFStart)-1]+LxFStart[length(SxFStart)])
-	#SxFStart[length(SxFStart)]<-SxFStart[length(SxFStart)-1]
+	##(OPEN-ENDED AGE GROUP OPTION (FEMALE))
+	SxFStart[length(SxFStart)-1]<-LxFStart[length(SxFStart)]/(LxFStart[length(SxFStart)-1]+LxFStart[length(SxFStart)])
+	SxFStart[length(SxFStart)]<-SxFStart[length(SxFStart)-1]
 	
-	###(OPEN-ENDED AGE GROUP OPTION (MALE))
-	#SxMStart[length(SxMStart)-1]<-LxMStart[length(SxMStart)]/(LxMStart[length(SxMStart)-1]+LxMStart[length(SxMStart)])
-	#SxMStart[length(SxMStart)]<-SxMStart[length(SxMStart)-1]
+	##(OPEN-ENDED AGE GROUP OPTION (MALE))
+	SxMStart[length(SxMStart)-1]<-LxMStart[length(SxMStart)]/(LxMStart[length(SxMStart)-1]+LxMStart[length(SxMStart)])
+	SxMStart[length(SxMStart)]<-SxMStart[length(SxMStart)-1]
 
 	##INITIAL e0
 	e0FStart<-sum(LxFStart[1:22]*5)
@@ -239,19 +240,41 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	for (i in 1:length(SxFAdj)-1){SxFAdj[i]<-(LxFAdj[i+1]/LxFAdj[i])}
 	for (i in 1:length(SxMAdj)-1){SxMAdj[i]<-(LxMAdj[i+1]/LxMAdj[i])}
 
-	###(OPEN-ENDED AGE GROUP OPTION (FEMALE))
-	#SxFAdj[length(SxFAdj)-1]<-LxFAdj[length(SxFAdj)]/(LxFAdj[length(SxFAdj)-1]+LxFAdj[length(SxFAdj)])
-	#SxFAdj[length(SxFAdj)]<-SxFAdj[length(SxFAdj)-1]
+	##(OPEN-ENDED AGE GROUP OPTION (FEMALE))
+	SxFAdj[length(SxFAdj)-1]<-LxFAdj[length(SxFAdj)]/(LxFAdj[length(SxFAdj)-1]+LxFAdj[length(SxFAdj)])
+	SxFAdj[length(SxFAdj)]<-SxFAdj[length(SxFAdj)-1]
 
-	###(OPEN-ENDED AGE GROUP OPTION (MALE))
-	#SxMAdj[length(SxMAdj)-1]<-LxMAdj[length(SxMAdj)]/(LxMAdj[length(SxMAdj)-1]+LxMAdj[length(SxMAdj)])
-	#SxMAdj[length(SxMAdj)]<-SxMAdj[length(SxMAdj)-1]
+	##(OPEN-ENDED AGE GROUP OPTION (MALE))
+	SxMAdj[length(SxMAdj)-1]<-LxMAdj[length(SxMAdj)]/(LxMAdj[length(SxMAdj)-1]+LxMAdj[length(SxMAdj)])
+	SxMAdj[length(SxMAdj)]<-SxMAdj[length(SxMAdj)-1]
 
 	##ADJUSTED e0
 	e0FAdj<-sum(LxFAdj[1:22]*5)
 	e0MAdj<-sum(LxMAdj[1:22]*5)
 
-##CONSTRUCT PROJECTION MATRICES WITH SURVIVAL ADJUSTMENT
+	##ADJUST GROSS MIGRATION OPTION
+        if(GrossMigrationAdjustLevel!=0)
+        {
+            RatiosGrossMigAdj<-Ratios
+            for (i in 2:HALFSIZE) {RatiosGrossMigAdj[i]<-(Ratios[i]-1)*(1-GrossMigrationAdjustLevel)+1-(1-SxFAdj[i])*GrossMigrationAdjustLevel}
+            SGrossMigAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
+            SGrossMigAdj_F<-rbind(0,cbind(diag(RatiosGrossMigAdj[2:HALFSIZE]),0))
+            ##OPEN-ENDED AGE GROUP (FEMALE)
+            RatiosGrossMigAdj[HALFSIZE]<-(Ratios[HALFSIZE]-1)*(1-GrossMigrationAdjustLevel)+1-(1-SxFAdj[HALFSIZE])*GrossMigrationAdjustLevel
+            SGrossMigAdj_F[HALFSIZE,HALFSIZE]<-SGrossMigAdj_F[HALFSIZE,HALFSIZE-1]<-RatiosGrossMigAdj[HALFSIZE]
+            S_F<-SGrossMigAdj_F
+            A_F<-B_F+S_F
+            
+            for (i in (HALFSIZE+2):SIZE) {RatiosGrossMigAdj[i]<-(Ratios[i]-1)*(1-GrossMigrationAdjustLevel)+1-(1-SxMAdj[i-HALFSIZE])*GrossMigrationAdjustLevel}
+            SGrossMigAdj_M<-array(0,c(HALFSIZE,HALFSIZE))
+            SGrossMigAdj_M<-rbind(0,cbind(diag(RatiosGrossMigAdj[(HALFSIZE+2):SIZE]),0))
+            ##OPEN-ENDED AGE GROUP (MALE)
+            RatiosGrossMigAdj[SIZE]<-(Ratios[SIZE]-1)*(1-GrossMigrationAdjustLevel)+1-(1-SxMAdj[HALFSIZE])*GrossMigrationAdjustLevel
+            SGrossMigAdj_M[HALFSIZE,HALFSIZE]<-SGrossMigAdj_M[HALFSIZE,HALFSIZE-1]<-RatiosGrossMigAdj[SIZE]
+            S_M<-SGrossMigAdj_M
+        }
+
+	##CONSTRUCT PROJECTION MATRICES WITH SURVIVAL ADJUSTMENT
 	SAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
 	SAdj_F<-rbind(0,cbind(diag(SxFAdj[2:(HALFSIZE)]-SxFStart[2:(HALFSIZE)]),0))
 	SAdj_F<-SAdj_F+S_F
@@ -271,7 +294,7 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 	AAdjcoltwo<-cbind(B_M,SAdj_M)
 	AAdj<-rbind(AAdjcolone,AAdjcoltwo)
 
-##PROJECTION IMPLEMENTATION (WITH FERTILITY AND MIGRATION ADJUSTMENTS)
+	##PROJECTION IMPLEMENTATION (WITH FERTILITY AND MIGRATION ADJUSTMENTS)
 	TMinusOneAgeNew<-data.frame(TMinusZeroAge) 
 		if(CURRENTSTEP>0){
 				TMinusZeroAge<-AAdj%*%TMinusZeroAge
@@ -297,11 +320,11 @@ ImpliedTFRNew<-((CCRNew$TMinusZeroAge[1]+CCRNew$TMinusZeroAge[HALFSIZE+1])/5)/su
 CCRatios<-array(0,length(TMinusOneAge)+1)
 for (i in 2:length(CCRatios)) {CCRatios[i]<-CCRNew$TMinusZeroAge[i]/CCRNew$TMinusOneAge[i-1]}
 CCRatiosF<-CCRatios[2:HALFSIZE]
-	###(OPEN-ENDED AGE GROUP OPTION (FEMALE))
-	#CCRatiosF[length(CCRatiosF)]<-CCRNew$TMinusZeroAge[HALFSIZE]/(CCRNew$TMinusOneAge[HALFSIZE-1]+CCRNew$TMinusOneAge[HALFSIZE])
+	##(OPEN-ENDED AGE GROUP OPTION (FEMALE))
+	CCRatiosF[length(CCRatiosF)]<-CCRNew$TMinusZeroAge[HALFSIZE]/(CCRNew$TMinusOneAge[HALFSIZE-1]+CCRNew$TMinusOneAge[HALFSIZE])
 CCRatiosM<-CCRatios[2+HALFSIZE:SIZE]
-	###(OPEN-ENDED AGE GROUP OPTION (MALE))
-	#CCRatiosM[length(CCRatiosM)-2]<-CCRNew$TMinusZeroAge[SIZE]/(CCRNew$TMinusOneAge[SIZE-1]+CCRNew$TMinusOneAge[SIZE])
+	##(OPEN-ENDED AGE GROUP OPTION (MALE))
+	CCRatiosM[length(CCRatiosM)-2]<-CCRNew$TMinusZeroAge[SIZE]/(CCRNew$TMinusOneAge[SIZE-1]+CCRNew$TMinusOneAge[SIZE])
 
 ##ESTIMATE STABLE POPULATION BY SIMULATION
 TMinusZeroAge<-TMinusZeroAgeInit
@@ -445,9 +468,9 @@ Sys.sleep(5)
 
 ##SECOND GRAPH - COHORT CHANGE RATIOS WITH AND WITHOUT ADJUSTMENTS
 agegroups2<-c("5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85+")
-plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.5,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
-	###(OPEN-ENDED AGE GROUP OPTION)
-	#mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-25,adj=.5,col="black")
+plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.25,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
+	##(OPEN-ENDED AGE GROUP OPTION)
+	mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-25,adj=.5,col="black")
 lines(Ratios[20:36],type="l",col="gold",lwd=4)
 lines(CCRatiosF,type="l",col="dodger blue",lty=2,lwd=2)
 lines(CCRatiosM,type="l",col="gold",lty=2,lwd=2)

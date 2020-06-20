@@ -485,5 +485,5 @@ mtext(side=1,c("Imputed e0, female:"),line=-8,adj=.125,col="black")
 mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.42,col="black")
 mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
 mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")
-}
+} 
 

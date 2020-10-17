@@ -57,8 +57,9 @@ FERTWIDTH<-35
 FirstYear<-strtoi(6)
 SecondYear<-strtoi(6)+5
 
-##IMPOSED TFR OPTION
+##IMPOSED TFR OPTION (WITH AUTOCORRELATION OPTION)
 ImposedTFR<-2.1
+ImposedTFR_ar<-.00
 ffab<-.4886
 UseImposedTFR<-"NO"
 
@@ -179,7 +180,7 @@ ImpliedTFR2015<-((TMinusZeroAgeInit[1]+TMinusZeroAgeInit[HALFSIZE+1])/5)/sum(TMi
 if(STEPS<198){
 
 ##FUNCTION INPUTTING
-CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
+CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
 	{
 
 ##CALCULATE SURVIVAL ADJUSTMENT (Yx, lx, Lx, Sx)
@@ -303,20 +304,22 @@ CCRProject<-function(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
 		if(NetMigrationAdjustLevel!=0)
 				{TMinusZeroAge<-NetMigrationAdjustLevel*5*sum(TMinusOneAgeNew)*Migration+TMinusZeroAge}
 		if(UseImposedTFR=="YES") 
-				{TMinusZeroAge[1]<-ImposedTFR*(sum(TMinusZeroAge[4:10])/FERTWIDTH)*5*ffab
-				TMinusZeroAge[HALFSIZE+1]<-ImposedTFR*(sum(TMinusZeroAge[4:10])/FERTWIDTH)*5*(1-ffab)}
+				{TMinusZeroAge[1]<-(ImpliedTFR*ImposedTFR_ar+ImposedTFR*(1-ImposedTFR_ar))*(sum(TMinusZeroAge[4:10])/FERTWIDTH)*5*ffab
+				TMinusZeroAge[HALFSIZE+1]<-(ImpliedTFR*ImposedTFR_ar+ImposedTFR*(1-ImposedTFR_ar))*(sum(TMinusZeroAge[4:10])/FERTWIDTH)*5*(1-ffab)}
 				}
+        TMinusZeroAge_NDF<-TMinusZeroAge
 	TMinusZeroAge<-data.frame(TMinusZeroAge)
-	return(c(TMinusZeroAge,TMinusOneAge=TMinusOneAgeNew,e0FStart=e0FStart,e0MStart=e0MStart,e0FAdj=e0FAdj,e0MAdj=e0MAdj,CURRENTSTEP=CURRENTSTEP+1))
+
+	##CALCULATE iTFR
+	ImpliedTFRNew<-((TMinusZeroAge_NDF[1]+TMinusZeroAge_NDF[HALFSIZE+1])/5)/sum(TMinusZeroAge_NDF[4:10])*FERTWIDTH
+
+	return(c(TMinusZeroAge=TMinusZeroAge,TMinusOneAge=TMinusOneAgeNew,ImpliedTFRNew=ImpliedTFRNew,e0FStart=e0FStart,e0MStart=e0MStart,e0FAdj=e0FAdj,e0MAdj=e0MAdj,CURRENTSTEP=CURRENTSTEP+1))
 	}
 }
 
 ##APPLY PROJECTIONS
-CCRNew<-CCRProject(TMinusZeroAge,BA_start,BA_end,CURRENTSTEP)
-while(CCRNew$CURRENTSTEP<STEPS+1) {CCRNew<-CCRProject(CCRNew$TMinusZeroAge,BA_start,BA_end,CCRNew$CURRENTSTEP)}
-
-##CALCULATE iTFR
-ImpliedTFRNew<-((CCRNew$TMinusZeroAge[1]+CCRNew$TMinusZeroAge[HALFSIZE+1])/5)/sum(CCRNew$TMinusZeroAge[4:10])*FERTWIDTH
+CCRNew<-CCRProject(TMinusZeroAge,ImpliedTFR2015,BA_start,BA_end,CURRENTSTEP)
+while(CCRNew$CURRENTSTEP<STEPS+1) {CCRNew<-CCRProject(CCRNew$TMinusZeroAge,CCRNew$ImpliedTFRNew,BA_start,BA_end,CCRNew$CURRENTSTEP)}
 
 ##CALCULATE EFFECTIVE COHORT CHANGE RATIOS
 CCRatios<-array(0,length(TMinusOneAge)+1)
@@ -328,10 +331,13 @@ CCRatiosM<-CCRatios[2+HALFSIZE:SIZE]
 	##(OPEN-ENDED AGE GROUP OPTION (MALE))
 	CCRatiosM[length(CCRatiosM)-2]<-CCRNew$TMinusZeroAge[SIZE]/(CCRNew$TMinusOneAge[SIZE-1]+CCRNew$TMinusOneAge[SIZE])
 
+##iTFR
+ImpliedTFRNew<-CCRNew$ImpliedTFRNew
+
 ##ESTIMATE STABLE POPULATION BY SIMULATION
 TMinusZeroAge<-TMinusZeroAgeInit
-CCRStable<-CCRProject(TMinusZeroAge,BA_start,BA_end,0)
-while(CCRStable$CURRENTSTEP<STEPSSTABLE+1) {CCRStable<-CCRProject(CCRStable$TMinusZeroAge,BA_start,BA_end,CCRStable$CURRENTSTEP)}
+CCRStable<-CCRProject(TMinusZeroAge,ImpliedTFR2015,BA_start,BA_end,0)
+while(CCRStable$CURRENTSTEP<STEPSSTABLE+1) {CCRStable<-CCRProject(CCRStable$TMinusZeroAge,CCRStable$ImpliedTFRNew,BA_start,BA_end,CCRStable$CURRENTSTEP)}
 ImpliedTFRStable<-((CCRStable$TMinusZeroAge[1]+CCRStable$TMinusZeroAge[HALFSIZE+1])/5)/sum(CCRStable$TMinusZeroAge[4:10])*FERTWIDTH
 
 ##########
@@ -488,4 +494,3 @@ mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.42,col="black")
 mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
 mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")
 } 
-

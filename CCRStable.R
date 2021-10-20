@@ -479,6 +479,7 @@ agegroups2<-c("5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-4
 plot(Ratios[2:18],type="l",col="dodger blue",main=paste(text=c("Effective Cohort Change Ratios, ",PROJECTIONYEAR-5," to ",PROJECTIONYEAR),collapse=""),ylim=c(.25,1.75),axes=FALSE,xlab="",ylab="Ratio",lwd=4)
 	##(OPEN-ENDED AGE GROUP OPTION)
 	mtext(side=1,c("(Note: 85+ ratios are applied to full 80+ age groups)"),line=-25,adj=.5,col="black")
+abline(a=NULL, b=NULL, h=1, v=NULL)
 lines(Ratios[20:36],type="l",col="gold",lwd=4)
 lines(CCRatiosF,type="l",col="dodger blue",lty=2,lwd=2)
 lines(CCRatiosM,type="l",col="gold",lty=2,lwd=2)
@@ -492,5 +493,8 @@ if (ImputeMort=="YES") {
 mtext(side=1,c("Imputed e0, female:"),line=-8,adj=.125,col="black")
 mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.42,col="black")
 mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
-mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")
-} 
+mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")} 
+
+
+
+

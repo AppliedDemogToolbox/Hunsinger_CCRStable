@@ -251,7 +251,6 @@ CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
 	SxMAdj[HALFSIZE-1]<-rev(cumsum(rev(LxMAdj[HALFSIZE:length(SxMAdj)])))[1]/rev(cumsum(rev(LxMAdj[(HALFSIZE-1):length(SxMAdj)])))[1]
 	SxMAdj[HALFSIZE]<-SxMAdj[HALFSIZE-1]
 
-
 	##ADJUSTED e0
 	e0FAdj<-sum(LxFAdj[1:22]*5)
 	e0MAdj<-sum(LxMAdj[1:22]*5)

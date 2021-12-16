@@ -278,11 +278,13 @@ CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
 	##CONSTRUCT PROJECTION MATRICES WITH SURVIVAL ADJUSTMENT
 	SAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
 	SAdj_F<-rbind(0,cbind(diag(SxFAdj[1:(HALFSIZE)-1]-SxFStart[1:(HALFSIZE)-1]),0))
+	SAdj_F[HALFSIZE,HALFSIZE]<-SAdj_F[HALFSIZE,HALFSIZE-1]
 	SAdj_F<-SAdj_F+S_F
 	AAdj_F<-B_F+SAdj_F
 
 	SAdj_M<-array(0,c(HALFSIZE,HALFSIZE))
 	SAdj_M<-rbind(0,cbind(diag(SxMAdj[1:(HALFSIZE)-1]-SxMStart[1:(HALFSIZE)-1]),0))
+	SAdj_M[HALFSIZE,HALFSIZE]<-SAdj_M[HALFSIZE,HALFSIZE-1]
 	SAdj_M<-SAdj_M+S_M
 
 	AAdj_Zero<-A_Zero<-array(0,c(HALFSIZE,HALFSIZE))

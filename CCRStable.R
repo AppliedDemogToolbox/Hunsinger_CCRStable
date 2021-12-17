@@ -20,10 +20,10 @@
 ##READING EXTERNAL DATA IN
 ##########
 
-##DATA (CENSUS BUREAU VINTAGE 2018 POPULATION ESTIMATES BY DEMOGRAPHIC CHARACTERISTICS)
-##https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata-06.csv 
-##https://www2.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2010-2018/
-K<-data.frame(read.table(file="https://raw.githubusercontent.com/AppliedDemogToolbox/CCRStable/master/cc-est2018-alldata-06_Extract.csv",header=TRUE,sep=","))
+##DATA (CENSUS BUREAU VINTAGE 2019 POPULATION ESTIMATES BY DEMOGRAPHIC CHARACTERISTICS)
+##https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/asrh/cc-est2019-alldata-06.csv 
+##https://www2.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2010-2019/
+K<-data.frame(read.table(file="https://raw.githubusercontent.com/edyhsgr/CCRStable/master/InputData/PopEstimates/cc-est2019-alldata-06_Extract.csv",header=TRUE,sep=","))
 
 ##CENSUS ACS (via IPUMS) CA MIGRATION DATA (GENERIC)
 Migration<-data.frame(read.table(file="https://raw.githubusercontent.com/AppliedDemogToolbox/CCRStable/master/AGenericMigrationProfile_CA_2013to2017ACS.csv",header=TRUE,sep=","))
@@ -65,7 +65,6 @@ UseImposedTFR<-"NO"
 
 ##ADJUST BY MIGRATION OPTION
 NetMigrationAdjustLevel<-0 #PERCENT OF POPULATION
-GrossMigrationAdjustLevel<-100 #PERCENT OF NET MIGRATION
 NetMigrationAdjustLevel<-NetMigrationAdjustLevel/100
 GrossMigrationAdjustLevel<-1 #100 PERCENT OF CURRENT
 
@@ -495,5 +494,7 @@ mtext(side=1,c(round(CCRNew$e0FAdj,1)),line=-8,adj=.42,col="black")
 mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
 mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")} 
 
+NewAge_F
+NewAge_M
 
 

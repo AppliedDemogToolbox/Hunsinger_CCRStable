@@ -7,7 +7,7 @@
 ##FORKED FOR APPLIED DEMOGRAPHY TOOLBOX SHARING, FROM GITHUB REPOSITORY AT: https://github.com/edyhsgr/CCRStable
 ##RELATED SHINY APP AT https://shiny.demog.berkeley.edu/eddieh/CCRStable/
 ##
-##AN MS EXCEL SPREADSHEET THAT REPLICATES THE METHOD AND RESULTS IS AVAILABLE AT: 
+##AN MS EXCEL SPREADSHEET THAT REPLICATES METHODS AND RESULTS IS AVAILABLE AT: 
 ##https://github.com/edyhsgr/CCRStable/blob/master/Oct2020Presentation/CCRAdjustmentSheet_December2021.xlsx
 ##
 ##IF YOU WOULD LIKE TO USE, SHARE OR REPRODUCE THIS CODE, PLEASE CITE THE SOURCE
@@ -67,9 +67,8 @@ ffab<-.4886
 UseImposedTFR<-"NO"
 
 ##ADJUST BY MIGRATION OPTION
-NetMigrationAdjustLevel<-0 #PERCENT OF POPULATION
-NetMigrationAdjustLevel<-NetMigrationAdjustLevel/100
-GrossMigrationAdjustLevel<-1 #100 PERCENT OF CURRENT
+NetMigrationAdjustLevel<-0.00    #FOR 0 PERCENT (OF POPULATION) PER YEAR; .01 WOULD BE 1 PERCENT
+GrossMigrationAdjustLevel<-1.00  #FOR 100 PERCENT OF GROSS MIGRATION (APPLIED TO INFERRED NET MIGRATION RATIOS)
 
 ##IMPUTE MORTALITY OPTION
 ##"BA" IS THE BRASS RELATIONAL LOGIT MODEL ALPHA
@@ -152,7 +151,7 @@ A_F<-B_F+S_F
 
 ##PLACING COHORT CHANGE RATIOS (MALE)
 S_M<-array(0,c(HALFSIZE,HALFSIZE))
-S_M<-rbind(0,cbind(diag(Ratios[20:SIZE]),0))
+S_M<-rbind(0,cbind(diag(Ratios[(HALFSIZE+2):SIZE]),0))
 
 ##OPEN-ENDED AGE GROUP (MALE)
 S_M[HALFSIZE,HALFSIZE-1]<-TMinusZeroAgeRatios[SIZE]/(TMinusOneAgeRatios[SIZE-1]+TMinusOneAgeRatios[SIZE])
@@ -182,10 +181,8 @@ ImpliedTFR2015<-((TMinusZeroAgeInit[1]+TMinusZeroAgeInit[HALFSIZE+1])/5)/sum(TMi
 if(STEPS<198){
 
 ##FUNCTION INPUTTING
-CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
-	{
-
-##CALCULATE SURVIVAL ADJUSTMENT (Yx, lx, Lx, Sx)
+CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP){
+	##CALCULATE SURVIVAL ADJUSTMENT (Yx, lx, Lx, Sx)
 	YxF<-YxM<-NULL
 	for (i in 1:length(lxF)){YxF[i]<-.5*log(lxF[i]/(1-lxF[i]))}
 	for (i in 1:length(lxM)){YxM[i]<-.5*log(lxM[i]/(1-lxM[i]))}
@@ -213,8 +210,8 @@ CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
 	SxMStart[HALFSIZE]<-rev(cumsum(rev(LxMStart[HALFSIZE:(length(LxMStart)-1)])))[1]/rev(cumsum(rev(LxMStart[(HALFSIZE-1):(length(LxMStart)-1)])))[1]
 
 	##INITIAL e0
-	e0FStart<-sum(LxFStart[1:22]*5)
-	e0MStart<-sum(LxMStart[1:22]*5)
+	e0FStart<-sum(LxFStart[1:(length(LxFStart)-1)]*5)
+	e0MStart<-sum(LxMStart[1:(length(LxFStart)-1)]*5)
 
 	lxFAdj<-array(0,length(lxF))
 	lxMAdj<-array(0,length(lxM))
@@ -250,12 +247,11 @@ CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
 	SxMAdj[HALFSIZE]<-rev(cumsum(rev(LxMAdj[HALFSIZE:(length(LxMAdj)-1)])))[1]/rev(cumsum(rev(LxMAdj[(HALFSIZE-1):(length(LxMAdj)-1)])))[1]
 
 	##ADJUSTED e0
-	e0FAdj<-sum(LxFAdj[1:22]*5)
-	e0MAdj<-sum(LxMAdj[1:22]*5)
+	e0FAdj<-sum(LxFAdj[1:(length(LxFStart)-1)]*5)
+	e0MAdj<-sum(LxMAdj[1:(length(LxFStart)-1)]*5)
 
         ##ADJUST GROSS MIGRATION OPTION
-        if(GrossMigrationAdjustLevel!=1)
-        {
+        if(GrossMigrationAdjustLevel!=1){
             RatiosGrossMigAdj<-Ratios
             for (i in 2:HALFSIZE) {RatiosGrossMigAdj[i]<-(Ratios[i]-SxFStart[i])*GrossMigrationAdjustLevel+SxFStart[i]}
             SGrossMigAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
@@ -271,7 +267,7 @@ CCRProject<-function(TMinusZeroAge,ImpliedTFR,BA_start,BA_end,CURRENTSTEP)
             ##OPEN-ENDED AGE GROUP (MALE)
             SGrossMigAdj_M[HALFSIZE,HALFSIZE]<-SGrossMigAdj_M[HALFSIZE,HALFSIZE-1]
             S_M<-SGrossMigAdj_M
-        }
+            }
 
 	##CONSTRUCT PROJECTION MATRICES WITH SURVIVAL ADJUSTMENT
 	SAdj_F<-array(0,c(HALFSIZE,HALFSIZE))
@@ -498,8 +494,4 @@ mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
 mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")} 
 
 #CCRNew
-
-
-
-
 

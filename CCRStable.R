@@ -5,7 +5,7 @@
 ##https://edyhsgr.github.io/eddieh/
 ##
 ##FORKED FOR APPLIED DEMOGRAPHY TOOLBOX SHARING, FROM GITHUB REPOSITORY AT: https://github.com/edyhsgr/CCRStable
-##RELATED SHINY APP AT https://shiny.demog.berkeley.edu/eddieh/CCRStable/
+##RELATED SHINY APP AT https://edyhsgr.shinyapps.io/CCRStable_California/
 ##
 ##AN MS EXCEL SPREADSHEET THAT REPLICATES METHODS AND RESULTS IS AVAILABLE AT: 
 ##https://github.com/edyhsgr/CCRStable/blob/master/Oct2020Presentation/CCRAdjustmentSheet_December2021.xlsx
@@ -16,7 +16,7 @@
 ##EXAMPLE DATA IS LINKED, SO YOU SHOULD BE ABLE TO SIMPLY COPY ALL AND PASTE INTO R TO SEE IT WORK
 ##
 ##THERE IS NO WARRANTY FOR THIS CODE
-##THIS CODE HAS NOT BEEN PEER-REVIEWED OR CAREFULLY TESTED - QUESTIONS AND COMMENTS ARE WELCOME, OF COURSE (edyhsgr@gmail.com)
+##THIS CODE HAS NOT BEEN PEER-REVIEWED OR CAREFULLY TESTED - QUESTIONS AND COMMENTS ARE WELCOME, OF COURSE (edyhsgr@protonmail.com)
 ##########
 
 ##########
@@ -494,4 +494,5 @@ mtext(side=1,c("Imputed e0, male:"),line=-7,adj=.122,col="black")
 mtext(side=1,c(round(CCRNew$e0MAdj,1)),line=-7,adj=.42,col="black")} 
 
 #CCRNew
+
 
